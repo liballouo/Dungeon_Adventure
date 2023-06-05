@@ -48,6 +48,10 @@ public class KeyHandler implements KeyListener{
 		else if(gp.gameState == gp.levelUpState) {
 			levelUpState(code);
 		}
+		// game over state
+		else if(gp.gameState == gp.gameOverState) {
+			gameOverState(code);
+		}
 		// debug
 //		if(code == KeyEvent.VK_T) {
 //			if(checkDrawTime == false) {
@@ -110,39 +114,43 @@ public class KeyHandler implements KeyListener{
 					System.out.println("Elf");
 					gp.player.player_class = gp.player.class_elf;
 					gp.player.getPlayerImage();
-					gp.player.setItems();
+					gp.player.setValues();
 					gp.gameState = gp.playState;
+					gp.ui.commandNum = 0;
 //					gp.playMusic(0);
 				}
 				// wizard
-				if(gp.ui.commandNum == 1) {
+				else if(gp.ui.commandNum == 1) {
 					System.out.println("Wizard");
 					gp.player.player_class = gp.player.class_wizard;
 					gp.player.getPlayerImage();
-					gp.player.setItems();
+					gp.player.setValues();
 					gp.gameState = gp.playState;
+					gp.ui.commandNum = 0;
 //					gp.playMusic(0);
 				}
 				// knight
-				if(gp.ui.commandNum == 2) {
+				else if(gp.ui.commandNum == 2) {
 					System.out.println("Knight");
 					gp.player.player_class = gp.player.class_knight;
 					gp.player.getPlayerImage();
-					gp.player.setItems();
+					gp.player.setValues();
 					gp.gameState = gp.playState;
+					gp.ui.commandNum = 0;
 //					gp.playMusic(0);
 				}
 				// dwarf
-				if(gp.ui.commandNum == 3) {
+				else if(gp.ui.commandNum == 3) {
 					System.out.println("Dwarf");
 					gp.player.player_class = gp.player.class_dwarf;
 					gp.player.getPlayerImage();
-					gp.player.setItems();
+					gp.player.setValues();
 					gp.gameState = gp.playState;
+					gp.ui.commandNum = 0;
 //					gp.playMusic(0);
 				}
 				// back
-				if(gp.ui.commandNum == 4) {
+				else if(gp.ui.commandNum == 4) {
 					gp.ui.titleScreenState = 0;
 					gp.ui.commandNum = 0;
 				}
@@ -215,6 +223,7 @@ public class KeyHandler implements KeyListener{
 			}
 		}
 	}
+	
 	public void levelUpState(int code) {
 		
 		if(code == KeyEvent.VK_W  || code == KeyEvent.VK_UP) {
@@ -230,26 +239,104 @@ public class KeyHandler implements KeyListener{
 			}
 		}
 		if(code == KeyEvent.VK_ENTER) {
+			
+			boolean newWeapon = true;
+			
 			// option 1
 			if(gp.ui.commandNum == 0) {
-				gp.player.inventory.add(gp.player.weaponList.get(gp.player.type_player).get(gp.player.options[0]));
-				gp.player.projectile[gp.player.inventory.size()-1][0] = gp.player.weaponList.get(gp.player.type_player).get(gp.player.options[0]);
+				
+				int index = -1;
+				for(int i=0; i<gp.player.inventory.size(); i++) {
+					if(gp.player.inventory.get(i) != null) {
+						if(gp.player.inventory.get(i).getClass().equals(gp.player.weaponList.get(gp.player.player_class).get(gp.player.options[0]).getClass())){
+							newWeapon = false;
+							index = i;
+						}
+					}
+				}
+				
+				if(newWeapon == true) {
+					gp.player.inventory.add(gp.player.weaponList.get(gp.player.player_class).get(gp.player.options[0]));
+					gp.player.projectile[gp.player.inventory.size()-1][0] = gp.player.weaponList.get(gp.player.player_class).get(gp.player.options[0]);
+				}
+				if(newWeapon == false) {
+					gp.player.weaponLevel[index]++;
+					gp.player.inventory.get(index).attack++;
+				}
+
 				gp.gameState = gp.playState;
 			}
 			// option 2
 			if(gp.ui.commandNum == 1) {
-				gp.player.inventory.add(gp.player.weaponList.get(gp.player.type_player).get(gp.player.options[1]));
-				gp.player.projectile[gp.player.inventory.size()-1][0] = gp.player.weaponList.get(gp.player.type_player).get(gp.player.options[1]);
+				int index = -1;
+				for(int i=0; i<gp.player.inventory.size(); i++) {
+					if(gp.player.inventory.get(i) != null) {
+						if(gp.player.inventory.get(i).getClass().equals(gp.player.weaponList.get(gp.player.player_class).get(gp.player.options[1]).getClass())){
+							newWeapon = false;
+							index = i;
+						}
+					}
+				}
+				if(newWeapon == true) {
+					gp.player.inventory.add(gp.player.weaponList.get(gp.player.player_class).get(gp.player.options[1]));
+					gp.player.projectile[gp.player.inventory.size()-1][0] = gp.player.weaponList.get(gp.player.player_class).get(gp.player.options[1]);
+				}
+				if(newWeapon == false) {
+					gp.player.weaponLevel[index]++;
+					gp.player.inventory.get(index).attack++;
+				}
 				gp.gameState = gp.playState;
 			}
 			// option 3
 			if(gp.ui.commandNum == 2) {
-				gp.player.inventory.add(gp.player.weaponList.get(gp.player.type_player).get(gp.player.options[2]));
-				gp.player.projectile[gp.player.inventory.size()-1][0] = gp.player.weaponList.get(gp.player.type_player).get(gp.player.options[2]);
+				int index = -1;
+				for(int i=0; i<gp.player.inventory.size(); i++) {
+					if(gp.player.inventory.get(i) != null) {
+						if(gp.player.inventory.get(i).getClass().equals(gp.player.weaponList.get(gp.player.player_class).get(gp.player.options[2]).getClass())){
+							newWeapon = false;
+							index = i;
+						}
+					}
+				}
+				if(newWeapon == true) {					
+					gp.player.inventory.add(gp.player.weaponList.get(gp.player.player_class).get(gp.player.options[2]));
+					gp.player.projectile[gp.player.inventory.size()-1][0] = gp.player.weaponList.get(gp.player.player_class).get(gp.player.options[2]);
+				}
+				if(newWeapon == false) {
+					gp.player.weaponLevel[index]++;
+					gp.player.inventory.get(index).attack++;
+				}
 				gp.gameState = gp.playState;
 			}
 		}
 	}
+	
+	public void gameOverState(int code) {
+		if(code == KeyEvent.VK_W || code == KeyEvent.VK_UP ) {
+			gp.ui.commandNum--;
+			if(gp.ui.commandNum < 0) {
+				gp.ui.commandNum = 1;
+			}
+			gp.playSE(9);
+		}
+		if(code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN) {
+			gp.ui.commandNum++;
+			if(gp.ui.commandNum > 1) {
+				gp.ui.commandNum = 0;
+			}
+			gp.playSE(9);
+		}		
+		if(code == KeyEvent.VK_ENTER) {
+			if(gp.ui.commandNum == 0) {
+				gp.gameState = gp.playState;
+				gp.restart();
+			}
+			else if(gp.ui.commandNum == 1) {
+				System.exit(0);
+			}
+		}
+	}
+	
 	@Override
 	public void keyReleased(KeyEvent e) {
 

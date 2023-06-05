@@ -39,14 +39,22 @@ public class MON_GreenSlime extends Entity{
 		
 		up1 = setup("/monster/greenslime_down_1", gp.tileSize, gp.tileSize);
 		up2 = setup("/monster/greenslime_down_2", gp.tileSize, gp.tileSize);
+		up3 = setup("/monster/greenslime_down_1", gp.tileSize, gp.tileSize);
+		up4 = setup("/monster/greenslime_down_2", gp.tileSize, gp.tileSize);
 		down1 = setup("/monster/greenslime_down_1", gp.tileSize, gp.tileSize);
 		down2 = setup("/monster/greenslime_down_2", gp.tileSize, gp.tileSize);
+		down3 = setup("/monster/greenslime_down_1", gp.tileSize, gp.tileSize);
+		down4 = setup("/monster/greenslime_down_2", gp.tileSize, gp.tileSize);
 		left1 = setup("/monster/greenslime_down_1", gp.tileSize, gp.tileSize);
 		left2 = setup("/monster/greenslime_down_2", gp.tileSize, gp.tileSize);
+		left3 = setup("/monster/greenslime_down_1", gp.tileSize, gp.tileSize);
+		left4 = setup("/monster/greenslime_down_2", gp.tileSize, gp.tileSize);
 		right1 = setup("/monster/greenslime_down_1", gp.tileSize, gp.tileSize);
 		right2 = setup("/monster/greenslime_down_2", gp.tileSize, gp.tileSize);
+		right3 = setup("/monster/greenslime_down_1", gp.tileSize, gp.tileSize);
+		right4 = setup("/monster/greenslime_down_2", gp.tileSize, gp.tileSize);
 	}
-	
+
 	public void setAction() {
 		
 		actionLockCounter++;
@@ -93,7 +101,7 @@ public class MON_GreenSlime extends Entity{
 		
 		// Cast a die
 		int i = new Random().nextInt(100)+1;
-		
+
 		// Set the monster drop
 		if(i < 50) {
 			dropItem(new OBJ_Exp_Normal(gp));

@@ -12,7 +12,7 @@ public class AssetSetter {
 	public AssetSetter(GamePanel gp) {
 		this.gp = gp;
 	}
-	
+
 	public void setObject() {
 	
 		int i = 0;

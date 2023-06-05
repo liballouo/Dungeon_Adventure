@@ -12,7 +12,7 @@ public class Sound {
 	URL soundURL[] = new URL[30];
 	
 	public Sound() {
-		
+	
 		soundURL[0] = getClass().getResource("/sound/Dungeon.wav");
 		soundURL[1] = getClass().getResource("/sound/coin.wav");
 		soundURL[2] = getClass().getResource("/sound/powerup.wav");
@@ -24,7 +24,9 @@ public class Sound {
 		soundURL[8] = getClass().getResource("/sound/levelup.wav");
 		soundURL[9] = getClass().getResource("/sound/cursor.wav");
 		soundURL[10] = getClass().getResource("/sound/burning.wav");
-
+		soundURL[11] = getClass().getResource("/sound/arrow.wav");
+		soundURL[12] = getClass().getResource("/sound/sword.wav");
+		soundURL[13] = getClass().getResource("/sound/gameover.wav");
 	}
 	
 	public void setFile(int i) {

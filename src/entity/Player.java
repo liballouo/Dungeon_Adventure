@@ -11,9 +11,9 @@ import java.util.Random;
 import main.GamePanel;
 import main.KeyHandler;
 import object.OBJ_Arrow;
+import object.OBJ_Ax;
 import object.OBJ_Fireball;
-import object.OBJ_Shield_Wood;
-import object.OBJ_Sword_Normal;
+import object.OBJ_Sword;
 
 public class Player extends Entity{
 
@@ -23,6 +23,14 @@ public class Player extends Entity{
 	
 	public ArrayList<Entity> inventory = new ArrayList<>();
 	public final int maxInventorySize = 4;
+	
+	// arrow, fireball, sword, ax
+	public int[] weaponLevel = new int[]{0, 0, 0, 0};
+	// elf, wizard, knight, dwarf
+	public int[] classSpeed = new int[] {4, 3, 2, 2};
+	public int[] classMaxLife = new int[] {22, 25, 30, 32};
+	public int[] classStrength = new int[] {2, 1, 4, 5};
+	public int[] classDefense = new int[] {0, 0, 2, 1};
 	
 	// level up selection option
 	public int[] options = new int[3];
@@ -53,50 +61,69 @@ public class Player extends Entity{
 		setDefaultValues();
 		getPlayerImage();
 //		getPlayerAttackImage();
-		setItems();
+		setValues();
 		setWeaponList();
 	}
 	
 	public void setDefaultValues() {
 		
-		worldX = gp.tileSize * 23;
-		worldY = gp.tileSize * 21;
+		worldX = gp.tileSize * 250;
+		worldY = gp.tileSize * 250;
 		speed = 2;
 		direction = "right";
 		preDirection = "right";
 		faceDirection = "right";
 				
 		// player status
-		level = 1;
-		maxLife = 6;
-		life = maxLife; // current life
 		exp = 0;
 		expRate = 1;
 		nextLevelExp = 5;
 		coin = 0;
 		killAmount = 0;
-//		currentWeapon = new OBJ_Sword_Normal(gp);
-//		currentShield = new OBJ_Shield_Wood(gp);
-		if(player_class == class_elf) {
-			projectile[0][0] = new OBJ_Arrow(gp);
-		}
-		if(player_class == class_wizard) {
-			projectile[0][0] = new OBJ_Fireball(gp);
-		}
-
+		
+		life = maxLife; // current life
 		attack = getAttack();
 	}
 	
-	public void setItems() {
-		
+	public void setValues() {
 		if(player_class == class_elf) {
+			speed = classSpeed[class_elf];
+			maxLife = classMaxLife[class_elf];
+			strength = classStrength[class_elf];
+			defense = classDefense[class_elf];
 			projectile[0][0] = new OBJ_Arrow(gp);
-			if(projectile[0][0] != null) inventory.add(projectile[0][0]);
+			inventory.clear();
+			inventory.add(projectile[0][0]);
 		}
 		if(player_class == class_wizard) {
+			speed = classSpeed[class_wizard];
+			maxLife = classMaxLife[class_wizard];
+			strength = classStrength[class_wizard];
+			defense = classDefense[class_wizard];
 			projectile[0][0] = new OBJ_Fireball(gp);
-			if(projectile[0][0] != null) inventory.add(projectile[0][0]);
+			inventory.clear();
+			inventory.add(projectile[0][0]);
 		}
+		if(player_class == class_knight) {
+			speed = classSpeed[class_knight];
+			maxLife = classMaxLife[class_knight];
+			strength = classStrength[class_knight];
+			defense = classDefense[class_knight];
+			projectile[0][0] = new OBJ_Sword(gp);
+			inventory.clear();
+			inventory.add(projectile[0][0]);
+		}
+		if(player_class == class_dwarf) {
+			speed = classSpeed[class_dwarf];
+			maxLife = classMaxLife[class_dwarf];
+			strength = classStrength[class_dwarf];
+			defense = classDefense[class_dwarf];
+			projectile[0][0] = new OBJ_Ax(gp);
+			inventory.clear();
+			inventory.add(projectile[0][0]);
+		}
+		
+		life = maxLife;
 
 //		inventory.add(currentWeapon);
 //		inventory.add(currentShield);
@@ -117,35 +144,57 @@ public class Player extends Entity{
 		
 		// Elf
 		weaponList.get(0).add(new OBJ_Arrow(gp));
-		weaponList.get(0).add(new OBJ_Arrow(gp));
-		weaponList.get(0).add(new OBJ_Arrow(gp));
-		weaponList.get(0).add(new OBJ_Arrow(gp));
-		weaponList.get(0).add(new OBJ_Arrow(gp));
+		weaponList.get(0).add(new OBJ_Fireball(gp));
+		weaponList.get(0).add(new OBJ_Sword(gp));
+		weaponList.get(0).add(new OBJ_Ax(gp));
 //		weaponList.get(0).add(new OBJ_Arrow(gp));
 //		weaponList.get(0).add(new OBJ_Arrow(gp));
 //		weaponList.get(0).add(new OBJ_Arrow(gp));
 //		weaponList.get(0).add(new OBJ_Arrow(gp));
 //		weaponList.get(0).add(new OBJ_Arrow(gp));
-		weaponList.get(0).add(new OBJ_Fireball(gp));
-		weaponList.get(0).add(new OBJ_Fireball(gp));
-		weaponList.get(0).add(new OBJ_Fireball(gp));
-		weaponList.get(0).add(new OBJ_Fireball(gp));
-		weaponList.get(0).add(new OBJ_Fireball(gp));
+//		weaponList.get(0).add(new OBJ_Arrow(gp));
+//		weaponList.get(0).add(new OBJ_Fireball(gp));
+//		weaponList.get(0).add(new OBJ_Fireball(gp));
+//		weaponList.get(0).add(new OBJ_Fireball(gp));
+//		weaponList.get(0).add(new OBJ_Fireball(gp));
+//		weaponList.get(0).add(new OBJ_Fireball(gp));
+		
 
 		
 		// Wizard
 		weaponList.get(1).add(new OBJ_Fireball(gp));
-		weaponList.get(1).add(new OBJ_Fireball(gp));
-		weaponList.get(1).add(new OBJ_Fireball(gp));
-		weaponList.get(1).add(new OBJ_Fireball(gp));
-		weaponList.get(1).add(new OBJ_Fireball(gp));
-		weaponList.get(1).add(new OBJ_Fireball(gp));
-		weaponList.get(1).add(new OBJ_Fireball(gp));
-		weaponList.get(1).add(new OBJ_Fireball(gp));
-		weaponList.get(1).add(new OBJ_Fireball(gp));
-		weaponList.get(1).add(new OBJ_Fireball(gp));
+		weaponList.get(1).add(new OBJ_Arrow(gp));
+		weaponList.get(1).add(new OBJ_Sword(gp));
+		weaponList.get(1).add(new OBJ_Ax(gp));
+//		weaponList.get(1).add(new OBJ_Fireball(gp));
+//		weaponList.get(1).add(new OBJ_Fireball(gp));
+//		weaponList.get(1).add(new OBJ_Fireball(gp));
+//		weaponList.get(1).add(new OBJ_Fireball(gp));
+//		weaponList.get(1).add(new OBJ_Fireball(gp));
+//		weaponList.get(1).add(new OBJ_Fireball(gp));
 		
+		// Knight
+		weaponList.get(2).add(new OBJ_Sword(gp));
+		weaponList.get(2).add(new OBJ_Arrow(gp));
+		weaponList.get(2).add(new OBJ_Fireball(gp));
+		weaponList.get(2).add(new OBJ_Ax(gp));
+//		weaponList.get(2).add(new OBJ_Sword(gp));
+//		weaponList.get(2).add(new OBJ_Sword(gp));
+//		weaponList.get(2).add(new OBJ_Sword(gp));
+//		weaponList.get(2).add(new OBJ_Sword(gp));
+//		weaponList.get(2).add(new OBJ_Sword(gp));
 		
+		// Dwarf
+		weaponList.get(3).add(new OBJ_Ax(gp));
+		weaponList.get(3).add(new OBJ_Arrow(gp));
+		weaponList.get(3).add(new OBJ_Fireball(gp));
+		weaponList.get(3).add(new OBJ_Sword(gp));
+//		weaponList.get(3).add(new OBJ_Sword(gp));
+//		weaponList.get(3).add(new OBJ_Sword(gp));
+//		weaponList.get(3).add(new OBJ_Sword(gp));
+//		weaponList.get(3).add(new OBJ_Sword(gp));
+//		weaponList.get(3).add(new OBJ_Sword(gp));
+//		weaponList.get(3).add(new OBJ_Sword(gp));
 	}
 	
 	public int getAttack() {
@@ -155,6 +204,17 @@ public class Player extends Entity{
 
 	public int  getDefense() {
 		return defense; //= dexterity * currentShield.defenseValue;
+	}
+	
+	public void setDefaultPositions() {
+		worldX = gp.tileSize*23;
+		worldY = gp.tileSize*21;
+		direction = "idle";
+	}
+	
+	public void restoreLife() {
+		life = maxLife;
+		invincible = false;
 	}
 	
 	public void getPlayerImage() {
@@ -338,7 +398,7 @@ public class Player extends Entity{
 			}
 
 //			}
-				
+			
 			gp.keyH.enterPressed = false;
 			
 			spriteCounter++;
@@ -366,29 +426,41 @@ public class Player extends Entity{
 		for(int i=0; i<projectile.length; i++) {
 			for(int j=0; j<gp.player.inventory.size(); j++) {
 				if(projectile[j][i] != null) {
+					
 					projectile[j][i].attackAvailableCounter++;
-					
-					if(projectile[j][i].attackAvailableCounter >= projectile[j][i].attackCD) {
-					
+					if(projectile[j][i].attackAvailableCounter >= projectile[j][i].attackCDList[projectile[j][i].level] 
+							&& projectile[j][i].alive == false) {
+						
 						// Set default coordinates, direction and user
-						projectile[j][i].set(worldX, worldY, faceDirection, true, this);
+						projectile[j][i].set(worldX, worldY, weaponLevel[j], faceDirection, true, this);
 						
 						// Add it to the list
 						gp.projectileList.add(projectile[j][i]);
-						
+
 						projectile[j][i].attackAvailableCounter = 0;
-						
-						
 						if(projectile[j][i].alive == false) {
 							projectile[j][i] = null;
 						}
-//						gp.playSE(10);
+						// arrow
+						if(projectile[j][i].getClass() == weaponList.get(0).get(0).getClass()) {
+							gp.playSE(11);
+						}
+						// fireball
+						if(projectile[j][i].getClass() == weaponList.get(0).get(1).getClass()) {
+							gp.playSE(10);
+						}
+						// sword
+						if(projectile[j][i].getClass() == weaponList.get(0).get(2).getClass()) {
+							gp.playSE(12);
+						}
+						// ax
+						if(projectile[j][i].getClass() == weaponList.get(0).get(3).getClass()) {
+							gp.playSE(12);
+						}
 					}
-					
+				
 				}
 			}
-			
-			
 		}
 		
 		// This needs to be outside of key's if statement
@@ -403,19 +475,15 @@ public class Player extends Entity{
 			life = maxLife;
 		}
 		
+		if(life<=0) {
+			gp.gameState = gp.gameOverState;
+			gp.stopMusic();
+			gp.playSE(13);
+		}
 	}
 	
 	public void attacking() {
 		
-		
-//		spriteCounter++;
-//		
-//		if(spriteCounter <= 5) {
-//			spriteNum = 1;
-//		}
-//		if(spriteCounter > 5 && spriteCounter <= 25) {
-//			spriteNum = 2;
-//			
 		// save the current worldX, worldY, solidArea for the player
 		int currentWorldX = worldX;
 		int currentWorldY = worldY;
@@ -543,10 +611,10 @@ public class Player extends Entity{
 			attack = getAttack();
 			defense = getDefense();
 			
-//			gp.playSE(8);
+			gp.playSE(8);
 			gp.gameState = gp.levelUpState;
 			for(int i=0; i<options.length; i++) {
-				options[i] = new Random().nextInt(10); // 0~10 weapon option, 11~20 ability option
+				options[i] = new Random().nextInt(4); // 0~10 weapon option, 11~20 ability option
 			}
 			
 			

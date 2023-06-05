@@ -53,13 +53,13 @@ public class UI {
 	// time
 	Timer timer;
 	boolean startTimer;
-	int second, minute;
+	public int second, minute;
 	String ddSecond, ddMinute;	
 	DecimalFormat dFormat = new DecimalFormat("00");
 	
 	public UI(GamePanel gp) {
 		this.gp = gp;
-		
+	
 		try {
 			InputStream is = getClass().getResourceAsStream("/font/x12y16pxMaruMonica.ttf");
 			maruMonica = Font.createFont(Font.TRUETYPE_FONT, is);
@@ -139,6 +139,10 @@ public class UI {
 			drawInformations();
 			drawLevelUpScreen();
 		}
+		// gameOver state
+		if(gp.gameState == gp.gameOverState) {
+			drawGameOverScreen();
+		}
 		
 	}
 
@@ -174,6 +178,25 @@ public class UI {
 		drawItem();
 		drawPlayTime();
 	}
+	
+	public void resetTimer() {
+		
+		timer.restart();
+		int x = gp.screenWidth/2-gp.tileSize;
+		int y = 65;
+
+		second = 0;
+		minute = 0;
+		ddSecond = dFormat.format(second);
+		ddMinute = dFormat.format(minute);
+		String text;
+
+		text = ddMinute + ":" + ddSecond;
+		g2.setColor(Color.white);
+		g2.setFont(g2.getFont().deriveFont(Font.BOLD, 40F));
+		g2.drawString(text, x, y);
+	}
+	
 	public void drawPlayTime() {
 		
 		if(startTimer == true) {
@@ -239,7 +262,7 @@ public class UI {
 			g2.drawString(text, x, y);
 			
 			// character image
-			drawCharacterImage();
+			drawCharacterImage(0, -1);
 			
 			// menu
 			g2.setFont(g2.getFont().deriveFont(Font.BOLD,40F));
@@ -276,8 +299,12 @@ public class UI {
 			
 			String text = "Select your character class!";
 			int x = getXforCenteredText(text);
-			int y = gp.tileSize*3;
+			int y = gp.tileSize + 20;
+			g2.setFont(g2.getFont().deriveFont(Font.BOLD));
 			g2.drawString(text, x, y);
+			
+			g2.setFont(g2.getFont().deriveFont(Font.PLAIN));
+			
 			
 			text = "Elf";
 			x = getXforCenteredText(text);
@@ -285,6 +312,8 @@ public class UI {
 			g2.drawString(text, x, y);
 			if(commandNum == 0) {
 				g2.drawString(">", x-gp.tileSize, y);
+				drawCharacterImage(1, commandNum);
+				drawCharacterDescription(commandNum);
 			}
 			
 			text = "Wizzard";
@@ -293,6 +322,8 @@ public class UI {
 			g2.drawString(text, x, y);
 			if(commandNum == 1) {
 				g2.drawString(">", x-gp.tileSize, y);
+				drawCharacterImage(1, commandNum);
+				drawCharacterDescription(commandNum);
 			}
 			
 			text = "Knight";
@@ -301,6 +332,8 @@ public class UI {
 			g2.drawString(text, x, y);
 			if(commandNum == 2) {
 				g2.drawString(">", x-gp.tileSize, y);
+				drawCharacterImage(1, commandNum);
+				drawCharacterDescription(commandNum);
 			}
 			
 			text = "Dwarf";
@@ -309,6 +342,8 @@ public class UI {
 			g2.drawString(text, x, y);
 			if(commandNum == 3) {
 				g2.drawString(">", x-gp.tileSize, y);
+				drawCharacterImage(1, commandNum);
+				drawCharacterDescription(commandNum);
 			}
 			
 			text = "Back";
@@ -321,49 +356,192 @@ public class UI {
 		}
 	}
 	
-	public void drawCharacterImage() {
-		int x = gp.screenWidth/2 - gp.tileSize*4;
-		int y = gp.tileSize*5;
-		
-//		BufferedImage elf1, elf2, elf3, elf4, wizzard1, wizzard2, wizzard3, wizzard4;
-		
-		spriteCounter++;
-		if(spriteCounter > 7) {
-			if(spriteNum == 1) {spriteNum = 2;}
-			else if(spriteNum == 2) {spriteNum = 3;}
-			else if(spriteNum == 3) {spriteNum = 4;}
-			else if(spriteNum == 4) {spriteNum = 1;}
-			spriteCounter = 0;
+	public void drawCharacterImage(int titleScreen, int selection) {
+		if(titleScreen == 0) {
+			int x = gp.screenWidth/2 - gp.tileSize*4;
+			int y = gp.tileSize*5;
+			
+//			BufferedImage elf1, elf2, elf3, elf4, wizzard1, wizzard2, wizzard3, wizzard4;
+			
+			spriteCounter++;
+			if(spriteCounter > 7) {
+				if(spriteNum == 1) {spriteNum = 2;}
+				else if(spriteNum == 2) {spriteNum = 3;}
+				else if(spriteNum == 3) {spriteNum = 4;}
+				else if(spriteNum == 4) {spriteNum = 1;}
+				spriteCounter = 0;
+			}
+			switch(spriteNum) {
+			case 1: g2.drawImage(gp.player.elf_right1, x, y, characterImageWidth, characterImageHeight, null); 
+					g2.drawImage(gp.player.wizzard_right1, x+gp.tileSize*2, y, characterImageWidth, characterImageHeight, null);
+					g2.drawImage(gp.player.knight_right1, x+gp.tileSize*4, y, characterImageWidth, characterImageHeight, null);
+					g2.drawImage(gp.player.dwarf_right1, x+gp.tileSize*6, y, characterImageWidth, characterImageHeight, null);
+
+					break;
+			case 2: g2.drawImage(gp.player.elf_right2, x, y, characterImageWidth, characterImageHeight, null);
+					g2.drawImage(gp.player.wizzard_right2, x+gp.tileSize*2, y, characterImageWidth, characterImageHeight, null);
+					g2.drawImage(gp.player.knight_right2, x+gp.tileSize*4, y, characterImageWidth, characterImageHeight, null);
+					g2.drawImage(gp.player.dwarf_right2, x+gp.tileSize*6, y, characterImageWidth, characterImageHeight, null);
+
+					break;
+			case 3: g2.drawImage(gp.player.elf_right3, x, y, characterImageWidth, characterImageHeight, null);
+					g2.drawImage(gp.player.wizzard_right3, x+gp.tileSize*2, y, characterImageWidth, characterImageHeight, null);
+					g2.drawImage(gp.player.knight_right3, x+gp.tileSize*4, y, characterImageWidth, characterImageHeight, null);
+					g2.drawImage(gp.player.dwarf_right3, x+gp.tileSize*6, y, characterImageWidth, characterImageHeight, null);
+
+					break;
+			case 4: g2.drawImage(gp.player.elf_right4, x, y, characterImageWidth, characterImageHeight, null);
+					g2.drawImage(gp.player.wizzard_right4, x+gp.tileSize*2, y, characterImageWidth, characterImageHeight, null);
+					g2.drawImage(gp.player.knight_right4, x+gp.tileSize*4, y, characterImageWidth, characterImageHeight, null);
+					g2.drawImage(gp.player.dwarf_right4, x+gp.tileSize*6, y, characterImageWidth, characterImageHeight, null);
+
+					break;
+			}
+			
 		}
-		switch(spriteNum) {
-		case 1: g2.drawImage(gp.player.elf_right1, x, y, characterImageWidth, characterImageHeight, null); 
-				g2.drawImage(gp.player.wizzard_right1, x+gp.tileSize*2, y, characterImageWidth, characterImageHeight, null);
-				g2.drawImage(gp.player.knight_right1, x+gp.tileSize*4, y, characterImageWidth, characterImageHeight, null);
-				g2.drawImage(gp.player.dwarf_right1, x+gp.tileSize*6, y, characterImageWidth, characterImageHeight, null);
+		if(titleScreen == 1) {
+			int x = gp.screenWidth/2 - gp.tileSize*6;
+			int y = gp.tileSize*4;
+						
+			spriteCounter++;
+			if(spriteCounter > 7) {
+				if(spriteNum == 1) {spriteNum = 2;}
+				else if(spriteNum == 2) {spriteNum = 3;}
+				else if(spriteNum == 3) {spriteNum = 4;}
+				else if(spriteNum == 4) {spriteNum = 1;}
+				spriteCounter = 0;
+			}
+			switch(spriteNum) {
+			case 1: switch(selection) {
+					case 0: g2.drawImage(gp.player.elf_right1, x, y, characterImageWidth*2, characterImageHeight*2, null); break;
+					case 1: g2.drawImage(gp.player.wizzard_right1, x, y, characterImageWidth*2, characterImageHeight*2, null); break;
+					case 2:	g2.drawImage(gp.player.knight_right1, x, y, characterImageWidth*2, characterImageHeight*2, null); break;
+					case 3:	g2.drawImage(gp.player.dwarf_right1, x, y, characterImageWidth*2, characterImageHeight*2, null); break;
+					}
 
-				break;
-		case 2: g2.drawImage(gp.player.elf_right2, x, y, characterImageWidth, characterImageHeight, null);
-				g2.drawImage(gp.player.wizzard_right2, x+gp.tileSize*2, y, characterImageWidth, characterImageHeight, null);
-				g2.drawImage(gp.player.knight_right2, x+gp.tileSize*4, y, characterImageWidth, characterImageHeight, null);
-				g2.drawImage(gp.player.dwarf_right2, x+gp.tileSize*6, y, characterImageWidth, characterImageHeight, null);
-
-				break;
-		case 3: g2.drawImage(gp.player.elf_right3, x, y, characterImageWidth, characterImageHeight, null);
-				g2.drawImage(gp.player.wizzard_right3, x+gp.tileSize*2, y, characterImageWidth, characterImageHeight, null);
-				g2.drawImage(gp.player.knight_right3, x+gp.tileSize*4, y, characterImageWidth, characterImageHeight, null);
-				g2.drawImage(gp.player.dwarf_right3, x+gp.tileSize*6, y, characterImageWidth, characterImageHeight, null);
-
-				break;
-		case 4: g2.drawImage(gp.player.elf_right4, x, y, characterImageWidth, characterImageHeight, null);
-				g2.drawImage(gp.player.wizzard_right4, x+gp.tileSize*2, y, characterImageWidth, characterImageHeight, null);
-				g2.drawImage(gp.player.knight_right4, x+gp.tileSize*4, y, characterImageWidth, characterImageHeight, null);
-				g2.drawImage(gp.player.dwarf_right4, x+gp.tileSize*6, y, characterImageWidth, characterImageHeight, null);
-
-				break;
+					break;
+			case 2: switch(selection) {
+					case 0: g2.drawImage(gp.player.elf_right2, x, y, characterImageWidth*2, characterImageHeight*2, null); break;
+					case 1: g2.drawImage(gp.player.wizzard_right2, x, y, characterImageWidth*2, characterImageHeight*2, null); break;
+					case 2:	g2.drawImage(gp.player.knight_right2, x, y, characterImageWidth*2, characterImageHeight*2, null); break;
+					case 3:	g2.drawImage(gp.player.dwarf_right2, x, y, characterImageWidth*2, characterImageHeight*2, null); break;
+					}
+					break;
+			case 3: switch(selection) {
+					case 0: g2.drawImage(gp.player.elf_right3, x, y, characterImageWidth*2, characterImageHeight*2, null); break;
+					case 1: g2.drawImage(gp.player.wizzard_right3, x, y, characterImageWidth*2, characterImageHeight*2, null); break;
+					case 2:	g2.drawImage(gp.player.knight_right3, x, y, characterImageWidth*2, characterImageHeight*2, null); break;
+					case 3:	g2.drawImage(gp.player.dwarf_right3, x, y, characterImageWidth*2, characterImageHeight*2, null); break;
+					}
+					break;
+			case 4: switch(selection) {
+					case 0: g2.drawImage(gp.player.elf_right4, x, y, characterImageWidth*2, characterImageHeight*2, null); break;
+					case 1: g2.drawImage(gp.player.wizzard_right4, x, y, characterImageWidth*2, characterImageHeight*2, null); break;
+					case 2:	g2.drawImage(gp.player.knight_right4, x, y, characterImageWidth*2, characterImageHeight*2, null); break;
+					case 3:	g2.drawImage(gp.player.dwarf_right4, x, y, characterImageWidth*2, characterImageHeight*2, null); break;
+					}
+					break;
+			}
 		}
 		
 	}
-	
+	public void drawCharacterDescription(int selection) {
+		
+		int speed=0, maxLife=0, strength=0, defense=0;
+		String initWeapon="";
+		
+		g2.setFont(g2.getFont().deriveFont(25F));
+		int x = gp.screenWidth/2 - gp.tileSize*7+20;
+		int y = gp.tileSize*10;
+		String text = "";
+		switch(selection) {
+		case 0: text = "Swift and accurate, \nthe Elf rains arrows from afar."; 
+				speed = gp.player.classSpeed[gp.player.class_elf];
+				maxLife = gp.player.classMaxLife[gp.player.class_elf];
+				strength = gp.player.classStrength[gp.player.class_elf];
+				defense = gp.player.classDefense[gp.player.class_elf];
+				initWeapon = "Arrow";
+				break;
+		case 1: text = "Wisdom and powerful, \nthe Wizard casts fiery spells.";
+				speed = gp.player.classSpeed[gp.player.class_wizard];
+				maxLife = gp.player.classMaxLife[gp.player.class_wizard];
+				strength = gp.player.classStrength[gp.player.class_wizard];
+				defense = gp.player.classDefense[gp.player.class_wizard];
+				initWeapon = "Fireball";
+				break;
+		case 2: text = "Honorable and strong, \nthe Knight wields a sharp sword."; 
+				speed = gp.player.classSpeed[gp.player.class_knight];
+				maxLife = gp.player.classMaxLife[gp.player.class_knight];
+				strength = gp.player.classStrength[gp.player.class_knight];
+				defense = gp.player.classDefense[gp.player.class_knight];
+				initWeapon = "Sword";
+				break;
+		case 3: text = "Stout and resilient, \nthe Dwarf wields a deadly axe.";
+				speed = gp.player.classSpeed[gp.player.class_dwarf];
+				maxLife = gp.player.classMaxLife[gp.player.class_dwarf];
+				strength = gp.player.classStrength[gp.player.class_dwarf];
+				defense = gp.player.classDefense[gp.player.class_dwarf];
+				initWeapon = "Ax";
+				break;
+		}
+		for(String line: text.split("\n")) {
+			g2.drawString(line, x, y);
+			x -= 35;
+			y += 30;
+		}
+		
+		int frameX = gp.screenWidth/2+gp.tileSize*3-20;
+		int frameY = gp.tileSize*2;
+		int frameWidth = gp.tileSize*5;
+		int frameHeight = gp.tileSize*8;
+		drawSubWindow(frameX, frameY, frameWidth ,frameHeight , 2);
+		
+		g2.setFont(g2.getFont().deriveFont(Font.BOLD, 30F));
+		int textX = frameX+20;
+		int textY = frameY+gp.tileSize;
+		
+		g2.drawString("SPEED:", textX, textY);
+		textY += 40;
+		g2.drawString("MAXLIFE:", textX, textY);
+		textY += 40;
+		g2.drawString("STRENGTH:", textX, textY);
+		textY += 40;
+		g2.drawString("DEFENSE:", textX, textY);
+		textY += 80;
+		g2.drawString("WEAPON:", textX, textY);
+		
+		int tailX = (frameX + frameWidth) - 30;
+		textY = frameY + gp.tileSize;
+		String value;
+		
+		value = String.valueOf(speed);
+		textX = getXforAlignToRightText(value,tailX);
+		g2.drawString(value, textX, textY);
+		textY += 40;
+		
+		value = String.valueOf(maxLife);
+		textX = getXforAlignToRightText(value,tailX);
+		g2.drawString(value, textX, textY);
+		textY += 40;
+		
+		value = String.valueOf(strength);
+		textX = getXforAlignToRightText(value,tailX);
+		g2.drawString(value, textX, textY);
+		textY += 40;
+		
+		value = String.valueOf(defense);
+		textX = getXforAlignToRightText(value,tailX);
+		g2.drawString(value, textX, textY);
+		textY += 80;
+		
+		value = String.valueOf(initWeapon);
+		textX = getXforAlignToRightText(value,tailX);
+		g2.drawString(value, textX, textY);
+		textY += 40;
+		
+		g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 42F));
+
+	}
 	public void drawPauseScreen() {
 		
 		g2.setColor(Color.white);
@@ -455,14 +633,37 @@ public class UI {
 		x += 5;
 		y = gp.tileSize*3-2;
 		for(int i=0 ;i<3; i++) {
-			g2.drawImage(weapons[i].image, x, y, weapons[i].imageWidth, weapons[i].imageHeight, null);
+			g2.drawImage(weapons[i].image, x+weapons[i].imageOffsetX, y+weapons[i].imageOffsetY, weapons[i].imageWidth, weapons[i].imageHeight, null);
 			y += windowHeight;
 		}
 		// option description
 		g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 20F));
 		y = gp.tileSize*2-7+subWindowHeight*2;
+		
+		boolean[] newWeapon = new boolean[3];
+		int[] index = new int[] {-1, -1, -1};
 		for(int i=0 ;i<3; i++) {
-			for(String line: weapons[i].description.split("\n")) {
+			newWeapon[i] = true;
+			for(int j=0; j<gp.player.inventory.size(); j++) {
+				if(gp.player.inventory.get(j) != null) {
+					if(gp.player.inventory.get(j).getClass().equals(weapons[i].getClass())){
+						newWeapon[i] = false;
+						index[i] = j;
+					}
+				}
+			}
+			
+			if(newWeapon[i] == true) {
+				text = weapons[i].description;
+			}
+			else {
+				text = "Attack: "+weapons[i].attackList[gp.player.weaponLevel[index[i]]+1]+", Targets: "+weapons[i].maxTargetValueList[gp.player.weaponLevel[index[i]]+1]
+						+"\nAttack CD: "+weapons[i].attackCDList[gp.player.weaponLevel[index[i]]+1];
+				if(weapons[i].isProjectile == true) {
+					text += ", Range: "+weapons[i].maxRangeList[gp.player.weaponLevel[index[i]]+1];
+				}
+			}
+			for(String line: text.split("\n")) {
 				g2.drawString(line, x, y);
 				y += 20;
 			}
@@ -476,7 +677,21 @@ public class UI {
 			y += windowHeight;
 		}
 		// new or level up
-		
+		x += subWindowWidth*2;
+		y = gp.tileSize*3+8;
+		for(int i=0; i<3; i++) {
+			if(newWeapon[i] == true) {
+				text = "NEW!!";
+				g2.setColor(Color.yellow);
+				g2.drawString(text, x, y);
+				g2.setColor(Color.white);
+			}
+			else {
+				text = "[Level: "+(gp.player.weaponLevel[index[i]]+1)+"]";
+				g2.drawString(text, x, y);
+			}
+			y += windowHeight;
+		}
 		
 		
 //		g2.drawImage(weapon1.image, x, y, gp.tileSize, gp.tileSize, null);
@@ -517,7 +732,7 @@ public class UI {
 		textY += lineHeight*2;
 		g2.drawString("Strength", textX, textY);
 		textY += lineHeight*2;
-		g2.drawString("Attack", textX, textY);
+		g2.drawString("Defense", textX, textY);
 		textY += lineHeight*2;
 		g2.drawString("Exp", textX, textY);
 		textY += lineHeight*2;
@@ -547,7 +762,7 @@ public class UI {
 		g2.drawString(value, textX, textY);
 		textY += lineHeight*2;
 		
-		value = String.valueOf(gp.player.attack);
+		value = String.valueOf(gp.player.defense);
 		textX = getXforAlignToRightText(value,tailX);
 		g2.drawString(value, textX, textY);
 		textY += lineHeight*2;
@@ -563,6 +778,45 @@ public class UI {
 		textY += lineHeight*2;		
 		
 //		g2.drawImage(gp.player.currentWeapon.down1, tailX-gp.tileSize, textY-10, null);
+	}
+	
+	public void drawGameOverScreen() {
+		g2.setColor(new Color(0,0,0,150));
+		g2.fillRect(0,0,gp.screenWidth,gp.screenHeight);
+		
+		int x;
+		int y;
+		String text;
+		g2.setFont(g2.getFont().deriveFont(Font.BOLD,110f));
+		
+		text = "Game Over";
+		//shadow
+		g2.setColor(Color.black);
+		x = getXforCenteredText(text);
+		y = gp.tileSize*4;
+		g2.drawString(text, x, y);
+		//Main
+		g2.setColor(Color.white);
+		g2.drawString(text, x-4, y-4);
+		
+		//Retry
+		g2.setFont(g2.getFont().deriveFont(50f));
+		text = "Retry";
+		x = getXforCenteredText(text);
+		y +=gp.tileSize*4;
+		g2.drawString(text, x, y);
+		if(commandNum == 0 ) {
+			g2.drawString(">", x-40, y);
+		}
+		
+		//Back to title screen
+		text = "Quit";
+		x = getXforCenteredText(text);
+		y += 55;
+		if(commandNum == 1) {
+			g2.drawString(">", x-40, y);
+		}
+		g2.drawString(text, x, y);
 	}
 	
 	public void drawExpBar() {
@@ -626,11 +880,13 @@ public class UI {
 		int slotX = slotXStart;
 		int slotY = slotYStart;
 		int slotSize = gp.tileSize+3;
-	
+		
+		String[] text = new String[4];
+		
 		// Draw player's items
 		for(int i=0; i<gp.player.inventory.size(); i++) {
-
-			g2.drawImage(gp.player.inventory.get(i).image, slotX, slotY, null);
+			
+			g2.drawImage(gp.player.inventory.get(i).image, slotX+gp.player.inventory.get(i).imageOffsetX, slotY+gp.player.inventory.get(i).imageOffsetY, null);
 			slotX += slotSize;
 			
 			if(i % 5 == 4) {
@@ -646,7 +902,7 @@ public class UI {
 		int cursorHeight = gp.tileSize;
 		// Draw cursor
 		g2.setColor(Color.white);
-		g2.setStroke(new BasicStroke(3));
+		g2.setStroke(new BasicStroke(2));
 		g2.drawRoundRect(cursorX, cursorY, cursorWidth, cursorHeight, 10, 10);
 		
 		// description
@@ -657,9 +913,11 @@ public class UI {
 		// Draw
 		int textX = dFrameX + 20;
 		int textY = dFrameY + gp.tileSize;
-		g2.setFont(g2.getFont().deriveFont(28F));
+		g2.setFont(g2.getFont().deriveFont(25F));
 		
 		int itemIndex = getItemIndexOnSlot();
+		
+		
 		
 		if(itemIndex < gp.player.inventory.size()) {
 			

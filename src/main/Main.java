@@ -9,8 +9,8 @@ public class Main {
 		JFrame window = new JFrame();
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setResizable(false);
-		window.setTitle("Final Project");
-		
+		window.setTitle("Dungeon Adventure");
+	
 		GamePanel gamePanel = new GamePanel();
 		window.add(gamePanel);
 		

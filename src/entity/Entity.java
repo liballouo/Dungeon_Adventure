@@ -19,7 +19,7 @@ public class Entity {
 	
 	public int worldX, worldY;
 	
-	public BufferedImage idle_left1, idle_left2, idle_left3, idle_left4, up1, up2, down1, down2, idle_right1, idle_right2, idle_right3, idle_right4,    
+	public BufferedImage idle_left1, idle_left2, idle_left3, idle_left4, up1, up2, up3, up4, down1, down2, down3, down4, idle_right1, idle_right2, idle_right3, idle_right4,    
 							left1, left2, left3, left4, right1, right2, right3, right4, upleft1, upleft2, upright1, upright2, downleft1, downleft2,
 							downright1, downright2;
 	public BufferedImage elf_right1, elf_right2, elf_right3, elf_right4, wizzard_right1, wizzard_right2, wizzard_right3, wizzard_right4, 
@@ -36,7 +36,7 @@ public class Entity {
 	// Collision Setting
 	public Rectangle solidArea = new Rectangle(0, 0, 40, 40);
 	public Rectangle attackArea = new Rectangle(0, 0, 0, 0);
-	public int solidAreaDefaultX, solidAreaDefaultY;
+	public int solidAreaDefaultX, solidAreaDefaultY, solidAreaDefaultWidth, solidAreaDefaultHeight;
 	public boolean collisionOn = false;
 	public boolean invincible = false;
 	boolean attacking = false;
@@ -48,7 +48,7 @@ public class Entity {
 //	public boolean hpBarOn = false;
 	
 	// counter
-	public int spriteCounter = 0;
+	int spriteCounter = 0;
 	public int actionLockCounter = 0;
 	public int invincibleCounter = 0;
 	public int shotAvailableCounter = 0;
@@ -83,6 +83,11 @@ public class Entity {
 	// weapons
 	public ArrayList<ArrayList<Projectile>> weaponList = new ArrayList<ArrayList<Projectile>>();
 	public Projectile[][] projectile = new Projectile[4][5];
+	public boolean isProjectile;
+	public int attackOffsetX = 0;
+	public int attackOffsetY = 0;
+	public int imageOffsetX = 0;
+	public int imageOffsetY = 0;
 	
 	// character image
 	public BufferedImage[] elf_idle;
@@ -94,10 +99,15 @@ public class Entity {
 	public int value;
 	public int targetValue; // number of targets being attacked
 	public int maxTargetValue;
+	public int[] maxTargetValueList;
 	public int range;
 	public int maxRange;
+	public int[] maxRangeList;
 	public int attackCD;
+	public boolean attackAvailable;
+	public int[] attackCDList;
 	public int attackValue;
+	public int[] attackList;
 	public int defenseValue;
 	public String description = "";
 	
@@ -211,6 +221,12 @@ public class Entity {
 				spriteNum = 2;
 			}
 			else if(spriteNum == 2) {
+				spriteNum = 3;
+			}
+			else if(spriteNum == 3) {
+				spriteNum = 4;
+			}
+			else if(spriteNum == 4) {
 				spriteNum = 1;
 			}
 			spriteCounter = 0;
@@ -241,44 +257,64 @@ public class Entity {
 			case "up":
 				if(spriteNum == 1) {image = up1;}
 				if(spriteNum == 2) {image = up2;}
+				if(spriteNum == 3) {image = up3;}
+				if(spriteNum == 4) {image = up4;}
 				break;
 			case "down":
 				if(spriteNum == 1) {image = down1;}
 				if(spriteNum == 2) {image = down2;}
+				if(spriteNum == 3) {image = down3;}
+				if(spriteNum == 4) {image = down4;}
 				break;
 			case "left":
 				if(spriteNum == 1) {image = left1;}
 				if(spriteNum == 2) {image = left2;}
+				if(spriteNum == 3) {image = left3;}
+				if(spriteNum == 4) {image = left4;}
 				break;
 			case "right":
 				if(spriteNum == 1) {image = right1;}
 				if(spriteNum == 2) {image = right2;}
+				if(spriteNum == 3) {image = right3;}
+				if(spriteNum == 4) {image = right4;}
 				break;
 			case "up_left":
 				if(spriteNum == 1) {image = left1;}
 				if(spriteNum == 2) {image = left2;}
+				if(spriteNum == 3) {image = left3;}
+				if(spriteNum == 4) {image = left4;}
 				break;
 			case "up_right":
 				if(spriteNum == 1) {image = right1;}
 				if(spriteNum == 2) {image = right2;}
+				if(spriteNum == 3) {image = right3;}
+				if(spriteNum == 4) {image = right4;}
 				break;
 			case "down_left":
 				if(spriteNum == 1) {image = left1;}
 				if(spriteNum == 2) {image = left2;}
+				if(spriteNum == 3) {image = left3;}
+				if(spriteNum == 4) {image = left4;}
 				break;
 			case "down_right":
 				if(spriteNum == 1) {image = right1;}
 				if(spriteNum == 2) {image = right2;}
+				if(spriteNum == 3) {image = right3;}
+				if(spriteNum == 4) {image = right4;}
 				break;
-			
+		
 			case "idle":
 				if(type == type_player || type == type_pickUpOnly) {
 					if(spriteNum == 1) {image = idle_left1;}
 					if(spriteNum == 2) {image = idle_left2;}
+					if(spriteNum == 3) {image = idle_left3;}
+					if(spriteNum == 4) {image = idle_left4;}
 				}
 				if(type == type_projectile) {
-					if(spriteNum == 1) {image = left1;}
-					if(spriteNum == 2) {image = left2;}
+//					if(spriteNum == 1) {image = left1;}
+//					if(spriteNum == 2) {image = left2;}
+//					if(spriteNum == 3) {image = left3;}
+//					if(spriteNum == 4) {image = left4;}
 				}
 				break;
 			}
@@ -299,7 +335,7 @@ public class Entity {
 				preMonsterAmount = gp.monster.length;
 			}
 			
-			g2.drawImage(image, screenX, screenY+10, null);
+			g2.drawImage(image, screenX-attackOffsetX, screenY+10+attackOffsetY, null);
 			
 			changeAlpha(g2, 1f);
 		}
